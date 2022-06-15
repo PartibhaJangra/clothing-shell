@@ -3,7 +3,6 @@ import { initializeApp } from "firebase/app";
 import {
   getAuth,
   signInWithPopup,
-  signInWithRedirect,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
@@ -35,8 +34,6 @@ googleProvider.setCustomParameters({ prompt: "select_account" });
 export const auth = getAuth();
 export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
-// export const signInWithGoogleRedirect = () =>
-//   signInWithRedirect(auth, googleProvider);
 
 // 3. Create DB
 export const db = getFirestore();
