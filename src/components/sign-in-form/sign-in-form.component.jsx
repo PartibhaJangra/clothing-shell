@@ -2,13 +2,12 @@ import { useState } from "react";
 
 import {
   signInWithGooglePopup,
-  createUserDocumentFromAuth,
   signInAuthUserWithEmailAndPassword,
 } from "../../utils/firebase/firebase.utils.js";
 import FormInput from "../form-input/form-input.component.jsx";
+import Button from "../button/button.component.jsx";
 
 import "./sign-in-form.styles.scss";
-import Button from "../button/button.component.jsx";
 
 const defaultFormFields = {
   email: "",
@@ -21,8 +20,7 @@ const SignInForm = () => {
   const { email, password } = formFields; // used as values in <imput/>
 
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
-    await createUserDocumentFromAuth(user);
+    await signInWithGooglePopup();
   };
 
   // clear input fields
@@ -35,11 +33,10 @@ const SignInForm = () => {
 
     // we migth fail while calling firebase server
     try {
-      const response = await signInAuthUserWithEmailAndPassword(
+      const { user } = await signInAuthUserWithEmailAndPassword(
         email,
         password
       );
-      console.log(response);
       resetFormFields();
     } catch (error) {
       switch (error.code) {
