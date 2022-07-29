@@ -1,18 +1,20 @@
 // component that contains code of each product displayed at shop option
-
-import { useContext } from "react";
-
-import { CartContext } from "../../contexts/cart.context.jsx";
+import { useDispatch, useSelector } from "react-redux";
 
 import Button from "../button/button.component.jsx";
+import { addItemToCart } from "../../store/cart/cart.action";
+import { selectCartItems } from "../../store/cart/cart.selector.js";
 
 import "./product-card.styles.scss";
 
 const ProductCard = ({ product }) => {
-  const { name, imageUrl, price } = product;
-  const { addItemToCart } = useContext(CartContext);
+  const dispatch = useDispatch();
 
-  const addProductToCart = () => addItemToCart(product);
+  const { name, imageUrl, price } = product;
+  const cartItems = useSelector(selectCartItems);
+
+  const addProductToCart = () => dispatch(addItemToCart(cartItems, product));
+
   return (
     <div className="product-card-container">
       <img src={imageUrl} alt={`${name}`} />

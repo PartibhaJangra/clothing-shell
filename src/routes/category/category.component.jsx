@@ -1,21 +1,22 @@
 // lists data for the selected category @ /shop/{category} url based on the url parameter
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import { CategoriesContext } from "../../contexts/categories.context";
 import ProductCard from "../../components/product-card/product-card.component";
+import { selectCategoriesMap } from "../../store/categories/category.selector";
 
 import "./category.styles.scss";
 
 const Category = () => {
   // get category value from the url; is called when <Category> is called on <Shop>
   const { category } = useParams();
-  const { categoriesMap } = useContext(CategoriesContext);
+  const categoriesMap = useSelector(selectCategoriesMap);
 
   // creating a state var so that products value does not changes everytime the <Category/> rerenders
   const [products, setProducts] = useState(categoriesMap[category]);
 
-  // products val only updated when category or categoriesMap is changes
+  // products val only updated when category or categoriesMap changes
   useEffect(() => {
     setProducts(categoriesMap[category]);
   }, [category, categoriesMap]);

@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -65,20 +64,15 @@ export const addCollectionAndDocuments = async (
   await batch.commit();
 };
 
+// returns categories as an array
 export const getCategoriesAndDocuments = async () => {
   const collectionRef = collection(db, "categories"); // creating collection reference
   const q = query(collectionRef);
   const querySnapshot = await getDocs(q);
 
-  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    // docSnapshot gives each document from categories collection
-    // docSnapshot.data() gives data of each document
-    const { title, items } = docSnapshot.data();
-    acc[title.toLowerCase()] = items;
-    return acc;
-  }, {});
-
-  return categoryMap;
+  // docSnapshot gives each document from categories collection
+  // docSnapshot.data() gives data of each document
+  return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
 };
 
 // use the DB
