@@ -9,8 +9,8 @@ import { rootReducer } from "./root-reducer";
 
 const persistConfig = {
   key: "root", // we want to persist the whole thing; start from the root level
-  storage: storage,
-  blacklist: ["user"], // store reducer values that we dont want to persist in local storage
+  storage, // storage: storage
+  whitelist: ["cart"], // store reducer values that we want to persist in local storage
 };
 
 // creating persistedReducer using persistConfig
