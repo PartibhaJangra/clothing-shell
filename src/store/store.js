@@ -3,6 +3,7 @@ import { compose, createStore, applyMiddleware } from "redux";
 import logger from "redux-logger";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import thunk from "redux-thunk";
 
 import { rootReducer } from "./root-reducer";
 
@@ -15,11 +16,12 @@ const persistConfig = {
 // creating persistedReducer using persistConfig
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// array of middlewares we are using
+// array of middlewares we are using [logger, thunk]
 // run only when we are not in production env; filer(Boolean) removes anything that's got false into it
-const middleWares = [process.env.NODE_ENV !== "production" && logger].filter(
-  Boolean
-);
+const middleWares = [
+  process.env.NODE_ENV !== "production" && logger,
+  thunk,
+].filter(Boolean);
 
 // decides whether to use compose from redux devTools or from redux
 // if first 2 conditions are true then return window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ else compose
