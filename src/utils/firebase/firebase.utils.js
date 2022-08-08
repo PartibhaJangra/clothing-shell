@@ -44,7 +44,7 @@ googleProvider.setCustomParameters({ prompt: "select_account" });
 // exporting authentication & instance of signInWithPopup
 export const auth = getAuth();
 export const signInWithGooglePopup = () =>
-  signInWithPopup(auth, googleProvider);
+  signInWithPopup(auth, googleProvider); // returns the auth object
 
 // 3. Create DB
 export const db = getFirestore();
@@ -82,9 +82,9 @@ export const createUserDocumentFromAuth = async (
 ) => {
   if (!userAuth) return;
 
-  const userDocRef = doc(db, "users", userAuth.uid); // returns doc ref in DB
+  const userDocRef = doc(db, "users", userAuth.uid); // returns doc ref in DB; its a pointer
 
-  const userSnapshot = await getDoc(userDocRef); //checks for data in DB
+  const userSnapshot = await getDoc(userDocRef); //checks for data in DB; userSnapshot contians the actual data
 
   // if user data does not exists; store in database
   if (!userSnapshot.exists()) {
@@ -104,8 +104,8 @@ export const createUserDocumentFromAuth = async (
 
   // if user data exists; dont do anything
 
-  // return userDocRef
-  return userDocRef;
+  // return userSnapshot
+  return userSnapshot;
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -124,3 +124,18 @@ export const signOutUser = async () => await signOut(auth);
 // helper function for leveraging onAuthStateChanged()
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
+
+// trying to see if there is an active user thats been authenticated already
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    // onAuthStateChanged returns unsubscribe
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (userAuth) => {
+        unsubscribe();
+        resolve(userAuth);
+      },
+      reject
+    );
+  });
+};

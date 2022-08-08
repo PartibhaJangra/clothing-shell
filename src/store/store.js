@@ -3,7 +3,9 @@ import { compose, createStore, applyMiddleware } from "redux";
 import logger from "redux-logger";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import thunk from "redux-thunk";
+import createSagaMiddleware from "redux-saga";
+
+import { rootSaga } from "./root-saga";
 
 import { rootReducer } from "./root-reducer";
 
@@ -13,6 +15,9 @@ const persistConfig = {
   whitelist: ["cart"], // store reducer values that we want to persist in local storage
 };
 
+// creating saga middleware
+const sagaMiddleware = createSagaMiddleware();
+
 // creating persistedReducer using persistConfig
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
@@ -20,7 +25,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 // run only when we are not in production env; filer(Boolean) removes anything that's got false into it
 const middleWares = [
   process.env.NODE_ENV !== "production" && logger,
-  thunk,
+  sagaMiddleware,
 ].filter(Boolean);
 
 // decides whether to use compose from redux devTools or from redux
@@ -34,11 +39,15 @@ const composeEnhancer =
 // need to generate middlewares using compose in order them to work
 const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
 
+// instantiating store with reducers and middlewares
 export const store = createStore(
   persistedReducer, // passing persistedReducer instead of rootReducer
   undefined,
   composedEnhancers
 ); //[rootReducer, defaultState, middleWares]
+
+// running saga middleware with our rootSaga
+sagaMiddleware.run(rootSaga);
 
 // exporting persistStore Obj
 export const persistor = persistStore(store);

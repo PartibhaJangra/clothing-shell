@@ -1,11 +1,9 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
-import {
-  createAuthUserWithEmailAndPassword,
-  createUserDocumentFromAuth,
-} from "../../utils/firebase/firebase.utils.js";
 import FormInput from "../form-input/form-input.component.jsx";
 import Button from "../button/button.component.jsx";
+import { signUpStart } from "../../store/user/user.action.js";
 
 import "./sign-up-form.styles.scss";
 
@@ -20,6 +18,8 @@ const SignUpForm = () => {
   // allows us to keep track of fields outside of form
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields; // used as values in <imput/>
+
+  const dispatch = useDispatch();
 
   // clear input fields
   const resetFormFields = () => {
@@ -36,12 +36,7 @@ const SignUpForm = () => {
 
     // we migth fail while calling firebase server
     try {
-      const { user } = await createAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
-      await createUserDocumentFromAuth(user, { displayName });
-
+      dispatch(signUpStart(email, password, displayName));
       resetFormFields();
     } catch (error) {
       if (error.code === "auth/email-already-in-use")

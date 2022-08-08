@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
-import {
-  signInWithGooglePopup,
-  signInAuthUserWithEmailAndPassword,
-} from "../../utils/firebase/firebase.utils.js";
 import FormInput from "../form-input/form-input.component.jsx";
-import Button from "../button/button.component.jsx";
+import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component.jsx";
+import {
+  googleSignInStart,
+  emailSignInStart,
+} from "../../store/user/user.action.js";
 
 import "./sign-in-form.styles.scss";
 
@@ -19,8 +20,10 @@ const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields; // used as values in <imput/>
 
+  const dispatch = useDispatch();
+
   const signInWithGoogle = async () => {
-    await signInWithGooglePopup();
+    dispatch(googleSignInStart());
   };
 
   // clear input fields
@@ -33,10 +36,7 @@ const SignInForm = () => {
 
     // we migth fail while calling firebase server
     try {
-      const { user } = await signInAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
+      dispatch(emailSignInStart(email, password));
       resetFormFields();
     } catch (error) {
       switch (error.code) {
@@ -80,7 +80,11 @@ const SignInForm = () => {
         />
         <div className="buttons-container">
           <Button type="submit">SIGN IN</Button>
-          <Button type="button" buttonType="google" onClick={signInWithGoogle}>
+          <Button
+            type="button"
+            buttonType={BUTTON_TYPE_CLASSES.google}
+            onClick={signInWithGoogle}
+          >
             Google sign in
           </Button>
         </div>
