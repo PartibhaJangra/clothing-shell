@@ -10,9 +10,10 @@ exports.handler = async (event) => {
     const { amount } = JSON.parse(event.body); // amount is passed in cents; amount * 100
 
     // 2. passing amount into stripe to make a payment intent; intent to make payment that stripe registers
+    // this is BE requesting the stripe for our payment
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
-      currency: "usd",
+      currency: "inr",
       payment_method_types: ["card"],
     });
 
