@@ -1,7 +1,11 @@
 // displays category options on homepage
 import { useNavigate } from "react-router-dom";
 
-import "./directory-item.styles.scss";
+import {
+  BackgroundImage,
+  Body,
+  DirectoryItemContainer,
+} from "./directory-item.styles.jsx";
 
 const DirectoryItem = ({ category }) => {
   const { title, imageUrl, route } = category;
@@ -11,16 +15,13 @@ const DirectoryItem = ({ category }) => {
   const onNavigateHandler = () => navigate(route);
 
   return (
-    <div className="directory-item-container" onClick={onNavigateHandler}>
-      <div
-        className="background-image"
-        style={{ backgroundImage: `url(${imageUrl})` }}
-      />
-      <div className="body">
+    <DirectoryItemContainer onClick={onNavigateHandler}>
+      <BackgroundImage style={{ backgroundImage: `url(${imageUrl})` }} />
+      <Body>
         <h2>{title}</h2>
         <p>Shop now</p>
-      </div>
-    </div>
+      </Body>
+    </DirectoryItemContainer>
   );
 };
 
