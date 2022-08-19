@@ -1,4 +1,5 @@
 // contains component for individual product and its info displayed on the checkout pg grid
+import { memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -10,7 +11,7 @@ import { selectCartItems } from "../../store/cart/cart.selector";
 
 import "./checkout-item.styles.scss";
 
-const CheckoutItem = ({ cartItem }) => {
+const CheckoutItem = memo(({ cartItem }) => {
   const { name, imageUrl, price, quantity } = cartItem;
   const cartItems = useSelector(selectCartItems);
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ const CheckoutItem = ({ cartItem }) => {
       </div>
     </div>
   );
-};
+});
 
 // &#10005; -> creates an X button in specific type of format
 // &#10094; & &#10095; -> gives '<' & '>' arrow for increment & decrement
