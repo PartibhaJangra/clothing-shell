@@ -9,6 +9,7 @@ export const CategoriesContext = createContext({
 export const CategoriesProvider = ({ children }) => {
   const [categoriesMap, setCategories] = useState({});
 
+  // as soon as the app mounts, we want to get categories from db and set categoryMap
   useEffect(() => {
     const getCategoriesMap = async () => {
       const categoryMap = await getCategoriesAndDocuments();
