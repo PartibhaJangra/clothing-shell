@@ -14,6 +14,7 @@ import {
 } from "./payment-form.styles";
 
 const PaymentForm = () => {
+  // used to make request in the format that stripe needs it to be
   const stripe = useStripe();
   const elements = useElements();
   const amount = useSelector(selectCartTotal);
@@ -30,7 +31,7 @@ const PaymentForm = () => {
     // the moment we're about to start a fetch
     setIsProcessingPayment(true);
 
-    // fetch requect to get the payment intent
+    // fetch request to get the payment intent
     // this is FE requesting the BE for payment Intent
     const response = await fetch("/.netlify/functions/create-payment-intent", {
       method: "post",
@@ -42,13 +43,15 @@ const PaymentForm = () => {
       }),
     }).then((res) => res.json());
 
+    // destructuring client_secret from response
     const {
       paymentIntent: { client_secret },
     } = response;
 
+    // confirmCardPayment -> card payment method specifically for cards
     const paymentResult = await stripe.confirmCardPayment(client_secret, {
       payment_method: {
-        card: elements.getElement(CardElement),
+        card: elements.getElement(CardElement), // fields present in CardElement will be returned
         billing_details: {
           name: currentUser ? currentUser.displayName : "Guest",
         },

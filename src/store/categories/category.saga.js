@@ -12,6 +12,7 @@ import { CATEGORIES_ACTION_TYPES } from "./category.types";
 export function* fetchCategoriesAsync() {
   try {
     const categoriesArray = yield call(getCategoriesAndDocuments);
+    // put -> generator version of dispatch
     yield put(fetchCategoriesSuccess(categoriesArray));
   } catch (error) {
     yield put(fetchCategoriesFailed(error));
